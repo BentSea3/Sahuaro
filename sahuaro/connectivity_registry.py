@@ -7,7 +7,9 @@ ParamSpec = Tuple[str, type, Callable[[Any], bool], str]
 StyleDef = dict[str, List[ParamSpec]]
 
 # Registry mapping connectivity category -> style name -> definition
-# Its important to add the 'energy' in the description for the unit conversion.
+# Its important to add the 'energy' description for the energy unit conversion
+# when the appropiate flag is used.
+.
 STYLE_REGISTRY: dict[str, dict[str, StyleDef]] = {
     # Pair interactions
     'pair_style': {
