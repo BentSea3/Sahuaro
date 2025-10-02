@@ -1,4 +1,4 @@
-# LAMMPS test script
+# LAMMPS fast simulation script
 
 units           real
 atom_style      full
@@ -69,7 +69,6 @@ fix             COMfix fwork recenter INIT INIT INIT shift all
 thermo_style    custom step temp c_ftemp v_xcom v_ycom v_zcom ke pe press vol cella cellb cellc cellalpha cellbeta cellgamma
 thermo          1000
 run             25000
-#unfix           mynvtw
 unfix           mynpt
 unfix           COMfix
 

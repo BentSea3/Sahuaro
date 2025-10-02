@@ -1,1 +1,0 @@
-mpirun -np 28 lmp -in sinput.in
