@@ -1,0 +1,9 @@
+Simulation of flexible IRMOF-1 using the Dubbledam2007 force field.
+
+Lattice parameters are calculated, averaged and printed to std output.
+Bond lenths calculated and outputted to bondInfo.dump file. Use the
+included bash script (calculate_bond_averages.sh) to print average
+bond lengths.
+
+Compare obtained results to the ones provided in the paper as validation
+of the implementation. Use longer simulations to ensure equilibration.

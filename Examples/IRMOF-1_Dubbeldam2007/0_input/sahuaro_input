@@ -1,0 +1,75 @@
+# CIF to LAMMPS input file. Sahuaro.
+
+PATHS:
+CIF = irmof1.cif
+
+# Atom type information.
+ATOMS:
+label  type  charge  radius  mass     P1     P2   
+Zn1    Zn     1.275  1.6      65.37   0.42   2.7 
+O1     O     -1.5    0.68    15.9994  700.0  2.98
+O2     O     -0.6    0.68    15.9994  70.5   3.11
+C1     C      0.475  0.720   12.0107  47.0   3.74
+C2     C      0.125  0.720   12.0107  47.86  3.47
+C3     C     -0.15   0.720   12.0107  47.86  3.47
+H1     H      0.15   0.320   1.00794  7.65   2.85
+
+# Connectivity section.
+
+CONSIDERATIONS:
+WRITE_LOG = yes
+ONLY_ATOMS = no
+IMPROPER_CENTRAL = first
+INCLUDE_TILT = yes
+CHARGES_FROM_CIF = no
+#REPLICATE = 2 2 2
+FILL_PARAMETERS = yes
+KELVIN_TO_KCALMOL = yes
+KJ_TO_KCALMOL = no
+FACTOR_0.5_HARMONIC = yes
+FACTOR_E_DIH_IMP = no
+Q_FROM_CHARGETRANSFER = no
+
+CONNECTIVITY_TYPES:
+PAIR_STYLE: lj/cut/coul/long
+BOND_STYLE: harmonic
+ANGLE_STYLE: harmonic
+DIHEDRAL_STYLE: harmonic
+IMPROPER_STYLE: cvff
+
+BONDS:
+a1  a2  P1                P2  
+Zn1 O2  0.0               1.92
+Zn1 O1  0.0               1.94
+C3  H1  366001.13136396   0.95
+C3  C3  483413.91047488   1.36
+C2  C3  483413.91047488   1.36
+C1  C2  353750.919316375  1.42
+O2  C1  543840.64928424   1.25
+
+ANGLES:
+a1  a2  a3  P1                P2
+C1  C2  C3  34926.5543205787  120.0
+C2  C3  H1  37263.15559911    120.0
+C3  C3  H1  37263.15559911    120.0
+C3  C2  C3  90640.10821404    120.0
+C3  C3  C2  90640.10821404    120.0
+O2  C1  O2  135960.162321060  130.0
+O2  C1  C2  54882.4848123699  115.0
+
+PDIHEDRALS:
+a1  a2  a3  a4 P1              P2   P3
+O2  C1  C2  C3 1258.890391861  -1    2
+C1  C2  C3  H1 1510.668470234  -1    2
+C1  C2  C3  C3 1510.668470234  -1    2
+H1  C3  C3  H1 1510.668470234  -1    2
+C2  C3  C3  H1 1510.668470234  -1    2
+C2  C3  C3  C2 1510.668470234  -1    2
+H1  C3  C2  C3 1510.668470234  -1    2
+C3  C2  C3  C3 1510.668470234  -1    2
+
+IDIHEDRALS:
+a1  a2  a3  a4  P1              P2  P3
+C1  O2  O2  C2  5035.561567446  -1   2
+C2  C3  C3  C1  5035.561567446  -1   2
+C3  C3  C2  H1  186.3157779955  -1   2

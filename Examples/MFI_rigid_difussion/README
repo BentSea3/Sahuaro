@@ -1,0 +1,8 @@
+Calculation of Methane (TraPPE-UA) diffusion in rigid MFI zeolite with:
+
+- slope of MSD
+- VACF
+
+Note: the inputs are only for example purposes, if you want to produce
+data for publication adapt the inputs for said purpose (ensure equilibration,
+production runs need to be longer, etc)

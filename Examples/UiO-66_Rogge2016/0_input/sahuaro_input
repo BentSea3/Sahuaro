@@ -1,0 +1,90 @@
+# CIF to LAMMPS input file. Sahuaro.
+
+# Path of unit cell cif and super cell cif.
+
+PATHS:
+CIF = UiO66_Pristine.cif
+
+# Atom type information.
+
+ATOMS:
+label    type  charge  radius  mass      epsilon  sigma  gauss_w 
+Zr       Zr     2.370  1.24    91.22400  0.300    2.540  2.367  
+O_ox     O     -1.083  0.53    15.99940  0.059    1.820  1.118  
+O_oh     O     -1.037  0.53    15.99940  0.059    1.820  1.118
+O_ca     O     -0.682  0.57    15.99940  0.059    1.820  1.118
+C_ca     C      0.764  0.67    12.01070  0.056    1.940  1.163  
+C1       C     -0.135  0.60    12.01070  0.056    1.960  1.163  
+C2       C     -0.106  0.60    12.01070  0.056    1.960  1.163  
+H_oh     H      0.497  0.32     1.00784  0.016    1.600  0.724  
+H2       H      0.152  0.32     1.00784  0.020    1.620  0.724  
+
+# Connectivity section.
+
+CONSIDERATIONS:
+WRITE_LOG = yes
+ONLY_ATOMS = no
+IMPROPER_CENTRAL = last
+INCLUDE_TILT = yes
+CHARGES_FROM_CIF = no
+REPLICATE = 2 2 2
+FILL_PARAMETERS = yes
+KELVIN_TO_KCALMOL = no
+KJ_TO_KCALMOL = yes
+FACTOR_0.5_HARMONIC = yes
+FACTOR_E_DIH_IMP = yes 0.5
+Q_FROM_CHARGETRANSFER = yes
+
+CONNECTIVITY_TYPES:
+PAIR_STYLE: mm3/switch3/coulgauss/long
+BOND_STYLE: harmonic
+ANGLE_STYLE: harmonic
+DIHEDRAL_STYLE: harmonic
+IMPROPER_STYLE: distharm
+
+BONDS:
+a1       a2    K                 eq_par
+C_ca     C1    2.0872600000e+03  1.4990000000e+00
+C_ca     O_ca  4.4136775000e+03  1.2740000000e+00
+C1       C2    3.1396220000e+03  1.4000000000e+00
+C2       C2    3.3818280000e+03  1.3880000000e+00
+C2       H2    3.3755000000e+03  1.0830000000e+00
+H_oh     O_oh  4.9569470000e+03  0.9970000000e+00
+O_ca     Zr    5.2249700000e+02  2.2120000000e+00
+O_oh     Zr    4.0337300000e+02  2.2580000000e+00
+O_ox     Zr    8.1881300000e+02  2.0700000000e+00
+
+ANGLES:
+a1    a2    a3    K                 eq_par
+C_ca  C1    C2    6.1662500000e+02  1.2011900000e+02
+C_ca  O_ca  Zr    2.9804900000e+02  1.3491000000e+02
+C1    C_ca  O_ca  1.6505500000e+02  1.1816050000e+02
+C1    C2    C2    4.6400300000e+02  1.2009500000e+02
+C1    C2    H2    2.8015000000e+02  1.1940700000e+02
+C2    C1    C2    4.4908100000e+02  1.1986300000e+02
+C2    C2    H2    3.4528300000e+02  1.2023300000e+02
+H_oh  O_oh  Zr    1.6126600000e+02  1.1490800000e+02
+O_ca  C_ca  O_ca  6.4793400000e+02  1.2325250000e+02
+Zr    O_oh  Zr    7.3822200000e+02  1.0522100000e+02
+Zr    O_ox  Zr    5.5632900000e+02  1.1894500000e+02
+O_ox  Zr    O_oh  1.7368200000e+02  6.7181000000e+01
+
+PDIHEDRALS:
+a1    a2    a3    a4    K                 sign  m 
+C_ca  C1    C2    C2    3.4770000000e+01  -1    2
+C_ca  C1    C2    H2    1.5962000000e+01  -1    2
+C1    C_ca  O_ca  Zr    4.9403000000e+01  -1    2
+C1    C2    C2    C1    3.0683000000e+01  -1    2
+C1    C2    C2    H2    3.6155000000e+01  -1    2
+C2    C1    C_ca  O_ca  1.6559000000e+01  -1    2
+C2    C1    C2    C2    3.1679000000e+01  -1    2
+C2    C1    C2    H2    2.5938000000e+01  -1    2
+H2    C2    C2    H2    1.6598000000e+01  -1    2
+O_ca  C_ca  O_ca  Zr    4.4160000000e+00  -1    2
+
+IDIHEDRALS:
+a1    a2    a3    a4    K                 eq_par
+C_ca  C2    C2    C1    4.4215000000e+01  0.0000000000e+00   
+C1    C2    H2    C2    2.5923700000e+02  0.0000000000e+00   
+C1    O_ca  O_ca  C_ca  1.4944180000e+03  0.0000000000e+00   
+Zr    Zr    Zr    O_ox  3.4324000000e+02  1.4500000000e-01

@@ -1,0 +1,110 @@
+# LAMMPS test script
+
+units           real
+atom_style      full
+boundary        p p p
+
+bond_style      hybrid zero harmonic
+angle_style     harmonic
+dihedral_style  harmonic
+improper_style  cvff
+pair_style      lj/cut/coul/long 12.0
+kspace_style    ewald 1e-6
+pair_modify     tail no mix arithmetic shift yes
+# Ignore non-bonded interaction between 1-2 and 1-3 neighbors
+special_bonds   lj 1.0e-100 1.0e-100 0.999999999 coul 1.0e-100 1.0e-100 0.999999999
+neigh_modify    every 1 delay 0 check yes
+
+variable        pre        equal 1.0
+variable        tem        equal 258.0
+variable        dt         equal 0.5
+variable        pdamp      equal 1000*${dt}
+variable        tdamp      equal 100*${dt}
+variable        sysid      string irmof1
+timestep        ${dt}
+
+# Read input files
+read_data       in.data
+include         in.coeffs
+
+# Deleting bonds 1 and 2 per the forcefield and recomputing non bonded interactions
+# between neighbors.
+delete_bonds all bond 1*2 remove special
+
+# -------------------------------
+# Minimization: atom positions
+# -------------------------------
+thermo_style    custom step etotal vol press temp cella cellb cellc pxx pyy pzz pxy pxz pyz
+thermo          100
+min_style       hftn
+minimize        0.0 0.0 1000000 10000000
+print           "Minimization 1 done"
+
+# Box relaxation
+thermo          100
+fix             1 all box/relax tri ${pre}
+min_style       cg
+min_modify      line quadratic
+minimize        0.0 0.0 1000000 10000000
+unfix           1
+print           "Minimization 2 done"
+
+reset_timestep  0
+
+# -------------------------------
+# Equilibration: NPT
+# -------------------------------
+velocity        all create ${tem} 527483
+fix             equilibration all npt temp ${tem} ${tem} ${tdamp} tri ${pre} ${pre} ${pdamp}
+thermo_style    custom step temp ke pe press vol cella cellb cellc cellalpha cellbeta cellgamma
+thermo          10000
+run             100000
+unfix           equilibration
+reset_timestep  0
+
+# -----------------------------------------------------------------------------
+# PRODUCTION RUN + Box‐average + Bond dump for post‐processing
+# -----------------------------------------------------------------------------
+
+# (a) Running average of box parameters
+variable  cella      equal  cella
+variable  cellb      equal  cellb
+variable  cellc      equal  cellc
+variable  cellalpha  equal  cellalpha
+variable  cellbeta   equal  cellbeta
+variable  cellgamma  equal  cellgamma
+
+fix  avgBox  all  ave/time  100 1 10000  v_cella v_cellb v_cellc v_cellalpha v_cellbeta v_cellgamma  ave running  file  box_params.avg
+
+# (b) Dump every bond’s type & length every 10000 steps
+compute bondProp all property/local batom1 batom2 btype
+compute bondLen  all bond/local       dist
+
+dump   bondDump all local   10000 bondInfo.dump c_bondProp[3] c_bondLen
+dump_modify bondDump colname 1 btype colname 2 dist
+
+# (c) Production NPT
+fix   production all npt temp ${tem} ${tem} ${tdamp} tri ${pre} ${pre} ${pdamp}
+run   200000
+
+# (d) Extract & print final box‐parameter averages BEFORE tearing down
+variable out_cella     equal f_avgBox[1]
+variable out_cellb     equal f_avgBox[2]
+variable out_cellc     equal f_avgBox[3]
+variable out_cellalpha equal f_avgBox[4]
+variable out_cellbeta  equal f_avgBox[5]
+variable out_cellgamma equal f_avgBox[6]
+
+print  "Final averaged cell parameters:"
+print  "  cella = ${out_cella}"
+print  "  cellb = ${out_cellb}"
+print  "  cellc = ${out_cellc}"
+print  "  alpha = ${out_cellalpha}"
+print  "  beta  = ${out_cellbeta}"
+print  "  gamma = ${out_cellgamma}"
+
+# (e) Tear down fixes and dumps
+unfix   avgBox
+undump  bondDump
+unfix   production
+

@@ -1,0 +1,7 @@
+Simulation of flexible pristine UiO-66 using the Rogge2016 force field.
+
+Lattice parameters, angles and stress tensor elements are calculated and
+printed to file.
+
+Compare obtained results to the ones provided in the paper as validation
+of the implementation. Use longer simulations to ensure equilibration.

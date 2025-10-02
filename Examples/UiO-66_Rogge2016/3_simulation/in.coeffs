@@ -1,0 +1,53 @@
+# Bond coefficients
+bond_coeff    1   249.433519    1.499000       # C_ca-C1
+bond_coeff    2   527.447040    1.274000       # C_ca-O_ca
+bond_coeff    3   375.193777    1.400000       # C1-C2
+bond_coeff    4   404.138084    1.388000       # C2-C2
+bond_coeff    5   403.381870    1.083000       # C2-H2
+bond_coeff    6   592.369294    0.997000       # H_oh-O_oh
+bond_coeff    7   62.439881     2.212000       # O_ca-Zr
+bond_coeff    8   48.204223     2.258000       # O_oh-Zr
+bond_coeff    9   97.850487     2.070000       # O_ox-Zr
+
+# Angle coefficients
+angle_coeff   1   73.688445     120.119000     # C_ca-C1-C2
+angle_coeff   2   35.617705     134.910000     # C_ca-O_ca-Zr
+angle_coeff   3   19.724543     118.160500     # C1-C_ca-O_ca
+angle_coeff   4   55.449681     120.095000     # C1-C2-C2
+angle_coeff   5   33.478723     119.407000     # C1-C2-H2
+angle_coeff   6   53.666459     119.863000     # C2-C1-C2
+angle_coeff   7   41.262303     120.233000     # C2-C2-H2
+angle_coeff   8   19.271747     114.908000     # H_oh-O_oh-Zr
+angle_coeff   9   77.429960     123.252500     # O_ca-C_ca-O_ca
+angle_coeff   10  88.219633     105.221000     # Zr-O_oh-Zr
+angle_coeff   11  66.482901     118.945000     # Zr-O_ox-Zr
+angle_coeff   12  20.755494     67.181000      # O_ox-Zr-O_oh
+
+# Dihedral coefficients
+dihedral_coeff 1   4.155114      -1      2        # C_ca-C1-C2-C2
+dihedral_coeff 2   1.907504      -1      2        # C_ca-C1-C2-H2
+dihedral_coeff 3   5.903799      -1      2        # C1-C_ca-O_ca-Zr
+dihedral_coeff 4   3.666706      -1      2        # C1-C2-C2-C1
+dihedral_coeff 5   4.320626      -1      2        # C1-C2-C2-H2
+dihedral_coeff 6   1.978848      -1      2        # C2-C1-C_ca-O_ca
+dihedral_coeff 7   3.785731      -1      2        # C2-C1-C2-C2
+dihedral_coeff 8   3.099665      -1      2        # C2-C1-C2-H2
+dihedral_coeff 9   1.983508      -1      2        # H2-C2-C2-H2
+dihedral_coeff 10  0.527725      -1      2        # O_ca-C_ca-O_ca-Zr
+
+# Improper coefficients
+improper_coeff 1   5.283819      0.000000       # C_ca-C2-C2-C1
+improper_coeff 2   30.979560     0.000000       # C1-C2-H2-C2
+improper_coeff 3   178.587210    0.000000       # C1-O_ca-O_ca-C_ca
+improper_coeff 4   41.018158     0.145000       # Zr-Zr-Zr-O_ox
+
+# Pair coefficients (self pairs). Corrected epsilon values
+pair_coeff 1 1   0.300000   2.54  2.3670        #  Zr-Zr
+pair_coeff 2 2   0.059000   1.82  1.1180        #  O_ox-O_ox
+pair_coeff 3 3   0.059000   1.82  1.1180        #  O_oh-O_oh
+pair_coeff 4 4   0.059000   1.82  1.1180        #  O_ca-O_ca
+pair_coeff 5 5   0.056000   1.94  1.1630        #  C_ca-C_ca
+pair_coeff 6 6   0.056000   1.96  1.1630        #  C1-C1
+pair_coeff 7 7   0.056000   1.96  1.1630        #  C2-C2
+pair_coeff 8 8   0.016000   1.60  0.7240        #  H_oh-H_oh
+pair_coeff 9 9   0.020000   1.62  0.7240        #  H2-H2

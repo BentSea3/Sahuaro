@@ -1,0 +1,42 @@
+# CIF to LAMMPS input file. Sahuaro.
+
+PATHS:
+CIF = MFI_SI.cif
+
+# Atom type information.
+ATOMS:
+label  type  charge  radius  mass     P1     P2   
+Si     Si     0.786  1.11    28.0855  22.0   2.30 
+O      O     -0.393  0.68    15.9994  53.0   3.30
+
+# Connectivity section.
+
+CONSIDERATIONS:
+WRITE_LOG = yes
+ONLY_ATOMS = yes
+#IMPROPER_CENTRAL = first
+INCLUDE_TILT = no
+CHARGES_FROM_CIF = no
+REPLICATE = 2 2 2
+FILL_PARAMETERS = no
+KELVIN_TO_KCALMOL = no
+KJ_TO_KCALMOL = no
+FACTOR_0.5_HARMONIC = no
+FACTOR_E_DIH_IMP = no
+Q_FROM_CHARGETRANSFER = no
+
+
+CONNECTIVITY_TYPES:
+PAIR_STYLE: lj/cut/coul/long
+
+BONDS:
+a1  a2  P1                P2  
+
+ANGLES:
+a1  a2  a3  P1                P2
+
+PDIHEDRALS:
+a1  a2  a3  a4 P1              P2   P3
+
+IDIHEDRALS:
+a1  a2  a3  a4  P1              P2  P3

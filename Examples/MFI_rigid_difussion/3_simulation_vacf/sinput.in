@@ -1,0 +1,76 @@
+# LAMMPS test script
+
+units           real
+atom_style      full
+boundary        p p p
+
+pair_style      lj/cut 12.0
+pair_modify     tail no mix arithmetic shift yes
+neigh_modify    every 1 delay 0 check yes
+
+# user variables
+variable        pre        equal 1.0
+variable        tem        equal 300.0
+variable        dt         equal 1.0
+variable        pdamp      equal 1000*${dt}
+variable        tdamp      equal 100*${dt}
+variable        mol        equal 10         # methane per unit cell
+
+# read in your base system
+read_data       in.data extra/atom/types 1 extra/special/per/atom 1
+include         in.coeffs
+molecule        methane methane_ua.dat
+
+#----------------------------------------------------------#
+# 1) Insert & equilibrate methane
+#----------------------------------------------------------#
+variable        ssmol equal 8*v_mol
+create_atoms    0 random ${ssmol} 23847 NULL mol methane 345628 overlap 2.0 maxtry 10000
+
+group           methane type 3
+group           fwork   type 1:2
+
+compute         wtemp methane temp
+timestep        ${dt}
+
+velocity        methane create ${tem} 57823
+fix             equilibration methane nvt temp ${tem} ${tem} ${tdamp}
+thermo          1000
+thermo_style    custom step c_wtemp ke pe press vol epair density
+run             50000
+unfix           equilibration
+
+#----------------------------------------------------------#
+# 2) Diffusion via VACF (3D, real units)
+#----------------------------------------------------------#
+reset_timestep  0
+
+# compute VACF of methane (3D, subtract COM drift)
+compute         vacf_methane methane vacf yes
+
+# accumulate VACF into a vector for trapezoidal integration
+fix             vacfvec methane vector 1 c_vacf_methane[4]
+
+# atom‐style dump every 1000 steps
+dump            myDump all atom 1000 methane_diffusion_atm.lammpstrj
+dump_modify     myDump sort id
+
+# run under NVE
+fix             production methane nve
+
+# define diffusion coefficient: D = (1/3)*∫ C_vv(t) dt
+variable        D_vacf equal (1.0/3.0)*${dt}*trap(f_vacfvec)
+
+# print VACF[4] and D_vacf every 1000 steps
+thermo_style    custom step temp c_vacf_methane[4] v_D_vacf
+thermo          1000
+run             100000
+
+# print final D
+print           "Diffusion coefficient (from VACF) = ${D_vacf} [A^2/fs]"
+
+# cleanup
+unfix           vacfvec
+unfix           production
+undump          myDump
+

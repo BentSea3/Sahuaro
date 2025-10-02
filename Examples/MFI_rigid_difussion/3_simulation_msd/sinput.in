@@ -1,0 +1,83 @@
+# LAMMPS test script
+
+units           real
+atom_style      full
+boundary        p p p
+
+pair_style      lj/cut 12.0
+pair_modify     tail no mix arithmetic shift yes
+neigh_modify    every 1 delay 0 check yes
+
+# user variables
+variable        pre        equal 1.0
+variable        tem        equal 300.0
+variable        dt         equal 1.0
+variable        pdamp      equal 1000*${dt}
+variable        tdamp      equal 100*${dt}
+variable        mol        equal 10         # methane per unit cell
+
+# read the framework and allow for the inclusion of one extra atom
+read_data       in.data extra/atom/types 1 extra/special/per/atom 1
+include         in.coeffs
+molecule        methane methane_ua.dat
+
+#----------------------------------------------------------#
+# 1) Insert & equilibrate methane
+#----------------------------------------------------------#
+
+# random insertion of methane molecules
+variable        ssmol equal 8*v_mol
+create_atoms    0 random ${ssmol} 23847 NULL mol methane 345628 overlap 2.0 maxtry 10000
+
+group           methane type 3
+group           fwork   type 1:2
+
+# in order to print only the temperature of the methane
+compute         wtemp methane temp
+timestep        ${dt}
+
+velocity        methane create ${tem} 57823
+# only allow the methane molecules to move (framework is treated as rigid)
+fix             equilibration methane nvt temp ${tem} ${tem} ${tdamp}
+thermo          1000
+thermo_style    custom step c_wtemp ke pe press vol epair density
+run             50000  # change to ensure equilibration
+unfix           equilibration
+
+#----------------------------------------------------------#
+# 2) Diffusion measurement (MSD) in 3D
+#----------------------------------------------------------#
+reset_timestep  0
+
+# MSD of methane COM
+compute         msd_methane methane msd com yes
+
+# two‐point estimate D = ⟨Δr²⟩/(6·t)
+variable        twopoint  equal c_msd_methane[4]/6/(step*${dt}+1.0e-6)
+
+# dump **all atoms**, atom‐style every 1000 steps
+# to analyze the trajectory of methane molecules
+dump            myDump all atom 1000 methane_diffusion_atm.lammpstrj
+dump_modify     myDump sort id
+
+# run NVE for production (framework rigid)
+fix             production methane nve
+
+# record MSD every 100 steps into a vector
+fix             msdfix     methane vector 100 c_msd_methane[4]
+
+# slope‐based D = slope(⟨Δr²⟩)/(6·t)
+variable        D_slope   equal slope(f_msdfix)/6/(100*${dt})
+
+thermo_style    custom step temp c_msd_methane[4] v_twopoint v_D_slope
+thermo          1000
+run             100000
+
+# Print the difussion coefficient to stdout
+print           "Diffusion coefficient (from slope) = ${D_slope} [A^2/fs]"
+
+# cleanup
+unfix           msdfix
+unfix           production
+undump          myDump
+

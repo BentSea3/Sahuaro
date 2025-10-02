@@ -1,0 +1,6 @@
+# Complete with appropriate parameters
+
+# Pair coefficients (self pairs)
+pair_coeff    1   1     # is Si-Si
+pair_coeff    2   2     # is O-O
+

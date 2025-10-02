@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sahuaro"
+version = "1.0.0"
+authors = [
+  { name="Esteban Acuna Yeomans", email="estacuna@gmail.com" },
+]
+description = "A tool to convert CIF crystal structures into LAMMPS data files."
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy",
+]

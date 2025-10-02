@@ -1,0 +1,108 @@
+# LAMMPS test script
+
+units           real
+atom_style      full
+boundary        p p p
+
+bond_style      harmonic
+angle_style     harmonic
+dihedral_style  harmonic
+improper_style  distharm
+pair_style      mm3/switch3/coulgauss/long 15 15 4
+kspace_style    ewald 1e-6
+pair_modify     tail no mix arithmetic
+special_bonds	lj 1.0e-100 1.0e-100 0.999999999 coul 0.999999999 0.999999999 0.999999999
+neigh_modify    every 1 delay 0 check yes
+
+variable        pre        equal 10000
+variable        tem        equal 300.0
+variable        dt         equal 0.5
+variable        pdamp      equal 1000*${dt}
+variable        tdamp      equal 100*${dt}
+variable        sysid      string unloaded
+
+read_data       in.data
+include         in.coeffs
+
+# Minimization atom positions
+
+thermo_style    custom step etotal vol press temp cella cellb cellc pxx pyy pzz pxy pxz pyz
+thermo          100
+min_style       hftn
+minimize        0.0 0.0 1000000 10000000
+print           "Minimization 1 done"
+
+# Minimization positions plus box relaxation
+thermo          100
+fix             1 all box/relax tri ${pre}
+min_style       cg
+min_modify      line quadratic
+minimize        0.0 0.0 1000000 10000000
+unfix           1
+print           "Minimization 2 done"
+
+reset_timestep 0
+
+# Quick framework npt
+velocity all create 300.0 527483
+fix             mynpt all npt temp ${tem} ${tem} ${tdamp} tri ${pre} ${pre} ${pdamp}
+thermo_style    custom step temp ke pe press vol cella cellb cellc cellalpha cellbeta cellgamma
+thermo          1000
+run             25000
+unfix           mynpt
+reset_timestep 0
+
+group           fwork type 1:9
+
+variable        xcom equal xcm(all,x)
+variable        ycom equal xcm(all,y)
+variable        zcom equal xcm(all,z)
+
+compute         ftemp fwork temp
+
+timestep        ${dt}
+
+# NPT equilibration
+
+fix             mynpt fwork npt temp ${tem} ${tem} ${tdamp} tri ${pre} ${pre} ${pdamp}
+fix             COMfix fwork recenter INIT INIT INIT shift all
+thermo_style    custom step temp c_ftemp v_xcom v_ycom v_zcom ke pe press vol cella cellb cellc cellalpha cellbeta cellgamma
+thermo          1000
+run             25000
+#unfix           mynvtw
+unfix           mynpt
+unfix           COMfix
+
+variable        ptot equal press
+variable        vtot equal vol
+variable        pxxi equal pxx
+variable        pyyi equal pyy
+variable        pzzi equal pzz
+variable        pxyi equal pxy
+variable        pxzi equal pxz
+variable        pyzi equal pyz
+variable        cell1 equal cella
+variable        cell2 equal cellb
+variable        cell3 equal cellc
+variable        alpha equal cellalpha
+variable        beta equal cellbeta
+variable        gamma equal cellgamma
+
+#----------------------------------------------------------#
+# Averaging fixes plus RDFs
+# ---------------------------------------------------------#
+
+fix             avs all ave/time 100 5 500 v_cell1 v_cell2 v_cell3 v_alpha v_beta v_gamma v_ptot v_vtot v_pxxi v_pyyi v_pzzi v_pxyi v_pxzi v_pyzi file averages_${sysid}.out
+
+fix             mynpt fwork npt temp ${tem} ${tem} ${tdamp} tri ${pre} ${pre} ${pdamp}
+fix             COMfix fwork recenter INIT INIT INIT shift all
+thermo_style    custom step temp c_ftemp press vol cella cellb cellc cellalpha cellbeta cellgamma v_ptot v_pxxi v_pyyi v_pzzi v_pxyi v_pxzi v_pyzi
+thermo          1000
+dump            myDump all atom 1000 pristine_uio_tri.lammpstrj
+run             25000
+unfix           avs
+undump          myDump
+unfix           mynpt
+unfix           COMfix
+write_restart   pristine_${sysid}.restart
+write_data      pristine_${sysid}_atmos.out nocoeff nofix

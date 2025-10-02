@@ -1,0 +1,42 @@
+# Bond coefficients (modification to use hybrid bond style zero / harmonic)
+bond_coeff    1   zero   1.920000       # Zn1-O2
+bond_coeff    2   zero   1.940000       # Zn1-O1
+bond_coeff    3   harmonic     363.659474    0.950000       # C3-H1
+bond_coeff    4   harmonic     480.321052    1.360000       # C3-C3
+bond_coeff    5   harmonic     480.321052    1.360000       # C2-C3
+bond_coeff    6   harmonic     351.487639    1.420000       # C1-C2
+bond_coeff    7   harmonic     540.361184    1.250000       # O2-C1
+
+# Angle coefficients
+angle_coeff   1   34.703096     120.000000     # C1-C2-C3
+angle_coeff   2   37.024748     120.000000     # C2-C3-H1
+angle_coeff   3   37.024748     120.000000     # C3-C3-H1
+angle_coeff   4   90.060197     120.000000     # C3-C2-C3
+angle_coeff   5   90.060197     120.000000     # C3-C3-C2
+angle_coeff   6   135.090296    130.000000     # O2-C1-O2
+angle_coeff   7   54.531349     115.000000     # O2-C1-C2
+
+# Dihedral coefficients
+dihedral_coeff 1   2.501672      -1      2        # O2-C1-C2-C3
+dihedral_coeff 2   3.002007      -1      2        # C1-C2-C3-H1
+dihedral_coeff 3   3.002007      -1      2        # C1-C2-C3-C3
+dihedral_coeff 4   3.002007      -1      2        # H1-C3-C3-H1
+dihedral_coeff 5   3.002007      -1      2        # C2-C3-C3-H1
+dihedral_coeff 6   3.002007      -1      2        # C2-C3-C3-C2
+dihedral_coeff 7   3.002007      -1      2        # H1-C3-C2-C3
+dihedral_coeff 8   3.002007      -1      2        # C3-C2-C3-C3
+
+# Improper coefficients
+improper_coeff 1   10.006689     -1      2        # C1-O2-O2-C2
+improper_coeff 2   10.006689     -1      2        # C2-C3-C3-C1
+improper_coeff 3   0.370247      -1      2        # C3-C3-C2-H1
+
+# Pair coefficients (self pairs)
+pair_coeff    1   1    0.000835      2.700000       # Zn1-Zn1
+pair_coeff    2   2    1.391043      2.980000       # O1-O1
+pair_coeff    3   3    0.140098      3.110000       # O2-O2
+pair_coeff    4   4    0.093399      3.740000       # C1-C1
+pair_coeff    5   5    0.095108      3.470000       # C2-C2
+pair_coeff    6   6    0.095108      3.470000       # C3-C3
+pair_coeff    7   7    0.015202      2.850000       # H1-H1
+

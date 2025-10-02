@@ -1,0 +1,6 @@
+mass 3 16.04
+
+# Pair coefficients (self pairs)
+pair_coeff    1   1   0.04372   2.30  # is Si-Si
+pair_coeff    2   2   0.10532   3.30  # is O-O
+pair_coeff    3   3   0.29410   3.73  # is CH3-CH3 
