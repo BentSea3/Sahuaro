@@ -9,7 +9,7 @@ StyleDef = dict[str, List[ParamSpec]]
 # Registry mapping connectivity category -> style name -> definition
 # Its important to add the 'energy' description for the energy unit conversion
 # when the appropiate flag is used.
-.
+
 STYLE_REGISTRY: dict[str, dict[str, StyleDef]] = {
     # Pair interactions
     'pair_style': {
@@ -52,6 +52,30 @@ STYLE_REGISTRY: dict[str, dict[str, StyleDef]] = {
             ],
             'optional': []
         } for m in ['lj','mm3']},
+        # Buckingham
+        'buck': {
+            'required': [
+                ('A', float, lambda v: True, 'energy'),
+                ('rho',   float, lambda v: v>0, 'distance'),
+                ('C',   float, lambda v: True, 'energy*distance^6'),
+            ],
+            'optional': [
+                ('cutoff', float, lambda v: True, 'distance'),
+                ('cutoff2', float, lambda v: True, 'distance'),
+            ]
+        },
+        # Buckingham variants
+        **{f'buck/coul/{m}': {
+            'required': [
+                ('A', float, lambda v: True, 'energy'),
+                ('rho',   float, lambda v: v>0, 'distance'),
+                ('C',   float, lambda v: True, 'energy*distance^6'),
+            ],
+            'optional': [
+                ('cutoff', float, lambda v: True, 'distance'),
+                ('cutoff2', float, lambda v: True, 'distance'),
+            ]
+        } for m in ['cut','long','msm']},
     },
     # Bond interactions
     'bond_style': {
@@ -65,7 +89,7 @@ STYLE_REGISTRY: dict[str, dict[str, StyleDef]] = {
         'morse': {
             'required': [
                 ('D0',    float, lambda v: True, 'energy'),
-                ('alpha', float, lambda v: v>0,            'inverse distance'),
+                ('alpha', float, lambda v: v>0, 'inverse distance'),
                 ('r0',    float, lambda v: True, 'distance'),
             ],
             'optional': []
