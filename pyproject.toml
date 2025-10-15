@@ -19,3 +19,6 @@ classifiers = [
 dependencies = [
     "numpy",
 ]
+
+[tool.setuptools]
+packages = ["sahuaro"]

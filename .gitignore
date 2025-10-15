@@ -6,8 +6,11 @@ __pycache__/
 .Python
 env/
 venv/
+sahuaroenv/
+*.egg-info
 
 # Output folder from your script
+basic/
 out_folder/
 out/
 *.log
