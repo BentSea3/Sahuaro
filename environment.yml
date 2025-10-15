@@ -1,8 +1,0 @@
-name: sahuaro
-channels:
-  - conda-forge
-dependencies:
-  - python=3.9
-  - numpy
-  - pytest
-  - pip

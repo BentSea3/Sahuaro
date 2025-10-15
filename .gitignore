@@ -6,6 +6,7 @@ __pycache__/
 .Python
 env/
 venv/
+*.egg-info
 
 # Output folder from your script
 out_folder/
