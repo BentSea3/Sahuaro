@@ -1,13 +1,33 @@
-# Python
+# Python bytecode and cache files
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
+
+# Python virtual environments
 env/
 venv/
+.venv/
+sahuaroenv/
 
-# Output folder from your script
+# Python packaging artifacts
+*.egg-info/
+build/
+dist/
+
+# Testing and coverage artifacts
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local configuration
+.env
+
+# Generated output directories
 out_folder/
 out/
+
+# Log files
 *.log
