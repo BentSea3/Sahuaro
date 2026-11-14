@@ -19,3 +19,9 @@ classifiers = [
 dependencies = [
     "numpy",
 ]
+[project.optional-dependencies]
+test = [
+    "pytest",
+]
+[tool.setuptools]
+packages = ["sahuaro"]
